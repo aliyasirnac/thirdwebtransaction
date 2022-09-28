@@ -16,10 +16,10 @@ export const Dashboard = () => {
   const sdk = useSDK();
   const address = useAddress();
   const [otherAccount, setOtherAccount] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(undefined);
+
   const sendTransactions = async () => {
     await sdk?.wallet.transfer(otherAccount, quantity);
-    
   };
 
   return (
@@ -37,7 +37,9 @@ export const Dashboard = () => {
             {address ? (
               <InputGroup>
                 <VStack>
-                  <Text>Your address: {otherAccount}</Text>
+                  <Text>
+                    Your address: <Text as="b">{address}</Text>
+                  </Text>
                   <Input
                     placeholder="To: "
                     size="md"
@@ -52,14 +54,15 @@ export const Dashboard = () => {
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                   />
-                  <Button onClick={sendTransactions}>Submit</Button>
+                  <Button onClick={sendTransactions}>Send</Button>
                 </VStack>
               </InputGroup>
             ) : (
               <InputGroup>
                 <VStack>
-                  <Text>Connect your wallet</Text>
-                  
+                  <Text as="b" fontSize="2xl">
+                    Connect your wallet
+                  </Text>
                 </VStack>
               </InputGroup>
             )}
