@@ -1,7 +1,7 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
+import Main from "./layouts/Main";
 
 function App() {
-  return <ConnectWallet accentColor="#F213A4" />;
+  return <Main />;
 }
 
 export default App;
