@@ -8,18 +8,32 @@ import {
   InputGroup,
   Text,
   VStack,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { useAddress, useSDK } from "@thirdweb-dev/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export const Dashboard = () => {
   const sdk = useSDK();
   const address = useAddress();
   const [otherAccount, setOtherAccount] = useState("");
   const [quantity, setQuantity] = useState(undefined);
+  const isAdmin = address === import.meta.env.VITE_ADMIN_ADDRESS;
+
+  const format = (val) => `$` + val;
+  const parse = (val) => val.replace(/^\$/, "");
 
   const sendTransactions = async () => {
-    await sdk?.wallet.transfer(otherAccount, quantity);
+    const transfer = await sdk?.wallet.transfer(otherAccount, quantity);
+    if (transfer.receipt.byzantium === true) {
+    }
+    setOtherAccount("");
+    toast.success("Successfully transfered!");
   };
 
   return (
@@ -40,6 +54,7 @@ export const Dashboard = () => {
                   <Text>
                     Your address: <Text as="b">{address}</Text>
                   </Text>
+
                   <Input
                     placeholder="To: "
                     size="md"
@@ -47,13 +62,22 @@ export const Dashboard = () => {
                     value={otherAccount}
                     onChange={(e) => setOtherAccount(e.target.value)}
                   />
-                  <Input
+                  <NumberInput
+                    onChange={(valueString) => setQuantity(parse(valueString))}
+                    value={format(quantity)}
+                    defaultValue={0.001}
+                    min={0.001}
+                    max={10}
+                    step={0.001}
+                    width="full"
                     placeholder="Quantity: "
-                    size="md"
-                    htmlSize={40}
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                  />
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
                   <Button onClick={sendTransactions}>Send</Button>
                 </VStack>
               </InputGroup>
