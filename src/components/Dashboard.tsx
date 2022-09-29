@@ -22,17 +22,17 @@ export const Dashboard = () => {
   const sdk = useSDK();
   const address = useAddress();
   const [otherAccount, setOtherAccount] = useState("");
-  const [quantity, setQuantity] = useState(undefined);
+  const [quantity, setQuantity] = useState(0.001);
   const isAdmin = address === import.meta.env.VITE_ADMIN_ADDRESS;
 
   const format = (val) => `$` + val;
   const parse = (val) => val.replace(/^\$/, "");
 
   const sendTransactions = async () => {
-    const transfer = await sdk?.wallet.transfer(otherAccount, quantity);
-    if (transfer.receipt.byzantium === true) {
-    }
+    await sdk?.wallet.transfer(otherAccount, quantity);
+
     setOtherAccount("");
+    setQuantity(0.001);
     toast.success("Successfully transfered!");
   };
 
