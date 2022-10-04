@@ -35,14 +35,15 @@ export const Dashboard = () => {
   const sendTransactions = async () => {
     await sdk?.wallet.transfer(otherAccount, quantity);
 
-    setSubmitted(true)
+    setSubmitted(true);
     setSubmittedAccount(otherAccount);
     setSubmittedQuantity(quantity);
     setOtherAccount("");
     setQuantity(0.001);
-    
+
     toast.success("Successfully transfered!");
   };
+  //  TODO localstorage kaydet ve öyle dene bir şeyler amk
 
   return (
     <Box
