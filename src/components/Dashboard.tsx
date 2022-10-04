@@ -17,13 +17,17 @@ import {
 import { useAddress, useSDK } from "@thirdweb-dev/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import HistoryTable from "./HistoryTable";
 
 export const Dashboard = () => {
   const sdk = useSDK();
   const address = useAddress();
   const [otherAccount, setOtherAccount] = useState("");
+  const [submittedAccount, setSubmittedAccount] = useState(undefined);
   const [quantity, setQuantity] = useState(0.001);
+  const [submittedQuantity, setSubmittedQuantity] = useState(undefined);
   const isAdmin = address === import.meta.env.VITE_ADMIN_ADDRESS;
+  const [isSubmitted, setSubmitted] = useState(false);
 
   const format = (val) => `$` + val;
   const parse = (val) => val.replace(/^\$/, "");
@@ -31,8 +35,12 @@ export const Dashboard = () => {
   const sendTransactions = async () => {
     await sdk?.wallet.transfer(otherAccount, quantity);
 
+    setSubmitted(true)
+    setSubmittedAccount(otherAccount);
+    setSubmittedQuantity(quantity);
     setOtherAccount("");
     setQuantity(0.001);
+    
     toast.success("Successfully transfered!");
   };
 
@@ -79,6 +87,11 @@ export const Dashboard = () => {
                     </NumberInputStepper>
                   </NumberInput>
                   <Button onClick={sendTransactions}>Send</Button>
+                  <HistoryTable
+                    submittedAccount={submittedAccount}
+                    submittedQuantity={submittedQuantity}
+                    isSubmitted={isSubmitted}
+                  />
                 </VStack>
               </InputGroup>
             ) : (
